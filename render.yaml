@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: react-job-portal-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        sync: false  # Set this to your Netlify URL after deploying frontend
+      - key: DB_URL
+        sync: false  # Your MongoDB Atlas connection string
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: COOKIE_EXPIRE
+        value: 7
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
