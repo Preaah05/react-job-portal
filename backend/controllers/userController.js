@@ -2,6 +2,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 import { User } from "../models/userSchema.js";
 import ErrorHandler from "../middlewares/error.js";
 import { sendToken } from "../utils/jwtToken.js";
+import { sendEmail, welcomeTemplate } from "../utils/emailService.js";
 
 export const register = catchAsyncErrors(async (req, res, next) => {
   const { name, email, phone, password, role } = req.body;
@@ -12,14 +13,19 @@ export const register = catchAsyncErrors(async (req, res, next) => {
   if (isEmail) {
     return next(new ErrorHandler("Email already registered !"));
   }
-  const user = await User.create({
-    name,
-    email,
-    phone,
-    password,
-    role,
-  });
+  const user = await User.create({ name, email, phone, password, role });
   sendToken(user, 201, res, "User Registered Sucessfully !");
+
+  // Send welcome email (non-blocking)
+  sendEmail({
+    to: email,
+    subject: "Welcome to CareerConnect! 🎉",
+    html: welcomeTemplate({
+      name,
+      role,
+      appUrl: process.env.FRONTEND_URL || "http://localhost:5173",
+    }),
+  }).catch((e) => console.error("[Email] Welcome email failed:", e.message));
 });
 
 export const login = catchAsyncErrors(async (req, res, next) => {

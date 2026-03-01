@@ -3,6 +3,8 @@ import ErrorHandler from "../middlewares/error.js";
 import { Application } from "../models/applicationSchema.js";
 import { Job } from "../models/jobSchema.js";
 import cloudinary from "cloudinary";
+import { sendEmail, newApplicationTemplate, applicationConfirmTemplate } from "../utils/emailService.js";
+import { User } from "../models/userSchema.js";
 
 export const postApplication = catchAsyncErrors(async (req, res, next) => {
   const { role } = req.user;
@@ -89,6 +91,42 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
       message: "Application Submitted!",
       application,
     });
+
+    // ── Send emails (non-blocking) ──────────────────────────
+    try {
+      const employer = await User.findById(jobDetails.postedBy);
+      const appUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+
+      // 1. Confirm to job seeker
+      await sendEmail({
+        to: email,
+        subject: `Application Received — ${jobDetails.title}`,
+        html: applicationConfirmTemplate({
+          applicantName: name,
+          jobTitle: jobDetails.title,
+          appUrl,
+        }),
+      });
+
+      // 2. Notify employer
+      if (employer) {
+        await sendEmail({
+          to: employer.email,
+          subject: `New Application for "${jobDetails.title}"`,
+          html: newApplicationTemplate({
+            employerName: employer.name,
+            jobTitle: jobDetails.title,
+            applicantName: name,
+            applicantEmail: email,
+            applicantPhone: phone,
+            applicationId: application._id,
+            appUrl,
+          }),
+        });
+      }
+    } catch (emailErr) {
+      console.error("[Email] Non-fatal error sending notification:", emailErr.message);
+    }
   } catch (error) {
     // Handle Cloudinary specific errors
     if (error.message && error.message.includes("api_key")) {

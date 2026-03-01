@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaCheck } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
@@ -144,23 +144,6 @@ const MyJobs = () => {
                         </div>
                         <div>
                           {" "}
-                          <span>Country:</span>
-                          <input
-                            type="text"
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                            value={element.country}
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "country",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
                           <span>City:</span>
                           <input
                             type="text"

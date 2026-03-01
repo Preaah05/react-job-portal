@@ -131,6 +131,7 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
     <>
       <div className="job_seeker_card">
         <div className="detail">
+          <span className="status-badge under-review">● Under Review</span>
           <p>
             <span>Name:</span> {element.name}
           </p>
@@ -144,7 +145,7 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
             <span>Address:</span> {element.address}
           </p>
           <p>
-            <span>CoverLetter:</span> {element.coverLetter}
+            <span>Cover Letter:</span> {element.coverLetter}
           </p>
         </div>
         <div className="resume">

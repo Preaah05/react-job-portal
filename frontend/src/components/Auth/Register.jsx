@@ -3,7 +3,7 @@ import { FaRegUser } from "react-icons/fa";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { RiLock2Fill } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
-import { FaPhoneFlip } from "react-icons/fa6";
+import { FaPhone } from "react-icons/fa";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -101,7 +101,7 @@ const Register = () => {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
-                <FaPhoneFlip />
+                <FaPhone />
               </div>
             </div>
             <div className="inputTag">
